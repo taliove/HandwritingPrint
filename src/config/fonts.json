@@ -17,8 +17,8 @@
       "name": "行书",
       "description": "行书字体，适合进阶练习",
       "fonts": {
-        "theme": "STXingkai",
-        "title": "STXingkai",
+        "theme": "STXingshu",
+        "title": "STXingshu",
         "pinyin": "ToneOZ-Pinyin-Kai-Traditional"
       },
       "fontFiles": {
