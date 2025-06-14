@@ -38,7 +38,7 @@
 ```bash
 # 1. 克隆项目
 git clone https://github.com/taliove/HandwritingPrint.git
-cd 练字打印
+cd HandwritingPrint
 
 # 2. 安装依赖
 npm install
