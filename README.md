@@ -55,12 +55,11 @@ npm start
 1. **配置 AI 服务**（推荐）
 2. **创建第一个字帖**
 
-<img src="docs/images/quick-start.png" alt="jpg name" width="60%"/>
+<img src="docs/images/create-copybook.gif" alt="jpg name" width="60%"/>
 
 3. **生成练字卡**
 
-<img src="docs/images/quick-start.png" alt="jpg name" width="60%"/>
-
+<img src="docs/images/generate.gif" alt="jpg name" width="60%"/>
 
 ## 🎯 主要功能
 
