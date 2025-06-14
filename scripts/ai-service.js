@@ -57,17 +57,22 @@ class AIService {
   }
 
   extractChineseCharacters(text) {
-    // 提取所有汉字，去重并保持顺序，同时清理文本
+    // 提取所有汉字，保留重复字符，同时清理文本
     const chineseRegex = /[\u4e00-\u9fff]/g;
     const matches = text.match(chineseRegex) || [];
-    const uniqueChars = [...new Set(matches)]; // 去重
     
-    // 输出清理信息
-    if (matches.length !== uniqueChars.length) {
-      console.log(chalk.gray(`📝 文本清理: 原始${matches.length}个汉字，去重后${uniqueChars.length}个`));
+    // 统计重复字符信息
+    const uniqueChars = [...new Set(matches)];
+    const duplicateCount = matches.length - uniqueChars.length;
+    
+    // 输出处理信息
+    if (duplicateCount > 0) {
+      console.log(chalk.gray(`📝 文本处理: 共${matches.length}个汉字，其中${duplicateCount}个重复字符已保留`));
+    } else {
+      console.log(chalk.gray(`📝 文本处理: 共${matches.length}个汉字，无重复字符`));
     }
     
-    return uniqueChars;
+    return matches; // 返回所有字符，包括重复的
   }
 
   // 显示进度条

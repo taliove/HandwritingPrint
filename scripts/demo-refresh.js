@@ -121,7 +121,7 @@ async function demoRefreshFeature() {
         console.log(chalk.cyan.bold('\n🎉 刷新数据功能演示完成！'));
         console.log(chalk.green('\n✨ 主要优势:'));
         console.log(chalk.gray('   • 支持外部编辑器编辑汉字'));
-        console.log(chalk.gray('   • 自动提取汉字并去重'));
+        console.log(chalk.gray('   • 自动提取汉字并保留重复字符'));
         console.log(chalk.gray('   • AI智能生成拼音'));
         console.log(chalk.gray('   • 安全的确认机制'));
         console.log(chalk.gray('   • 实时预览和对比'));

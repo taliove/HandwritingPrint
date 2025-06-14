@@ -4,8 +4,8 @@
       "name": "楷书",
       "description": "传统楷书字体，适合初学者练习",
       "fonts": {
-        "theme": "STKaiti",
-        "title": "STKaiti",
+        "theme": "LvMuJiJXP",
+        "title": "LvMuJiJXP",
         "pinyin": "ToneOZ-Pinyin-Kai-Traditional"
       },
       "fontFiles": {
@@ -30,7 +30,7 @@
       "name": "隶书",
       "description": "隶书字体，古典风格",
       "fonts": {
-        "theme": "LiShu",
+        "theme": "STLiti",
         "title": "STLiti",
         "pinyin": "ToneOZ-Pinyin-Kai-Traditional"
       },

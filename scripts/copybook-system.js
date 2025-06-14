@@ -206,7 +206,7 @@ class CopybookSystem {
     try {
       const content = await fs.readFile(txtPath, 'utf8');
       
-      // 提取汉字，去重并保持顺序
+      // 提取汉字，保留重复字符
       const characters = this.aiService.extractChineseCharacters(content);
       
       if (characters.length === 0) {
