@@ -58,6 +58,25 @@
 #let centerLineContent = block(width:100%, height:1.2cm, place(center+horizon,line(start: (0%, 0%), end: (100%, 0%),stroke: (paint: themeColor, thickness: 1pt, dash: ("dot", 2pt, 4pt, 2pt)))))
 #let mod = (a, b) => a - b * calc.floor(a / b)
 #let one_box_canvas(width, font, font-size, color, word, pinyin) = {
+  // 根据拼音字符数动态调整字体大小
+  let dynamic_pinyin_size = if pinyin.len() >= 6 {
+    // 6个字符及以上：进一步缩小（减少0.2cm）
+    let base_size = if pinyinSize == 0.6cm { 0.4cm } else { 
+      let size_val = pinyinSize / 1cm
+      (size_val - 0.2) * 1cm
+    }
+    base_size
+  } else if pinyin.len() >= 5 {
+    // 5个字符：适度缩小（减少0.1cm）
+    let base_size = if pinyinSize == 0.6cm { 0.5cm } else { 
+      let size_val = pinyinSize / 1cm
+      (size_val - 0.1) * 1cm
+    }
+    base_size
+  } else {
+    pinyinSize
+  }
+  
   cetz.canvas({
     import cetz.draw: *
     set-style(stroke: 1pt + themeColor)
@@ -74,7 +93,7 @@
     line((width/2, 0), (width/2, width))
     line((0, width/2), (width, width/2))
     content((name: "box"), box(width: width, height: width, baseline: 50%, place(center+horizon,dy: -4pt, text(font: font,fill:color, size: font-size, word))))
-    content((name: "pinyin"), box(width: width, height: width, baseline: 50%, place(center+horizon,dy: -1pt, text(font: pinyinFont,fill:color, size: pinyinSize, pinyin))))
+    content((name: "pinyin"), box(width: width, height: width, baseline: 50%, place(center+horizon,dy: -1pt, text(font: pinyinFont,fill:color, size: dynamic_pinyin_size, pinyin))))
   })
 }
 
