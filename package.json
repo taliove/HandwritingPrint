@@ -1,0 +1,59 @@
+{
+  "name": "chinese-character-practice-cards",
+  "version": "1.0.0",
+  "description": "基于 Typst 的小学生字练习卡生成工具",
+  "main": "index.js",
+  "scripts": {
+    "start": "node scripts/copybook-cli.js",
+    "migrate": "node scripts/migrate-data.js",
+    "test": "jest",
+    "test:system": "node scripts/test-system.js",
+    "test:batch": "node scripts/test-batch.js",
+    "test:ai": "node scripts/test-ai-feature.js",
+    "test:refresh": "node scripts/test-refresh-feature.js",
+    "test:pinyin": "node scripts/test-pinyin-improvements.js",
+    "demo:refresh": "node scripts/demo-refresh.js",
+    "lint": "eslint scripts/ --fix",
+    "legacy:config": "node scripts/config-manager.js",
+    "legacy:config:show": "node scripts/config-manager.js show",
+    "legacy:config:fonts": "node scripts/config-manager.js fonts",
+    "legacy:config:update": "node scripts/config-manager.js update",
+    "legacy:config:validate": "node scripts/config-manager.js validate",
+    "legacy:font:set": "node scripts/config-manager.js set-font",
+    "legacy:font:list": "node scripts/font-installer.js list",
+    "legacy:font:validate": "node scripts/font-installer.js validate",
+    "legacy:font:preview": "node scripts/font-installer.js preview",
+    "legacy:font:install": "node scripts/font-installer.js install"
+  },
+  "keywords": [
+    "typst",
+    "chinese",
+    "education",
+    "practice",
+    "cards",
+    "pdf"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "chalk": "^4.1.2",
+    "chokidar": "^3.5.3",
+    "eslint": "^8.57.0",
+    "fs-extra": "^11.2.0",
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/chinese-character-practice-cards.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/chinese-character-practice-cards/issues"
+  },
+  "homepage": "https://github.com/yourusername/chinese-character-practice-cards#readme",
+  "dependencies": {
+    "inquirer": "^8.2.6"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "project": {
+    "name": "练字打印工具",
+    "version": "1.0.0",
+    "description": "基于 Typst 的小学生字练习卡生成工具"
+  },
+  "layout": {
+    "paper": "a4",
+    "flipped": false,
+    "margin": "1.2cm",
+    "columnCount": 12,
+    "wordTotal": 48,
+    "wordCount": 8,
+    "boxSize": "1.5cm"
+  },
+  "fontSet": "kaishu",
+  "colors": {
+    "theme": "#b2f2bb",
+    "border": "#40c057",
+    "text": "#000000",
+    "grayText": "#808080"
+  },
+  "sizes": {
+    "pinyinHeight": "1cm",
+    "pinyinSize": "0.6cm",
+    "titleSize": "16pt",
+    "wordSize": "30pt",
+    "signSize": "10pt"
+  },
+  "content": {
+    "sign": "业精于勤而荒于嬉，行成于思而毁于随",
+    "includeScore": true,
+    "scoreItems": [
+      "坐姿",
+      "规范书写", 
+      "握笔姿势"
+    ]
+  },
+  "output": {
+    "directory": "output",
+    "format": "pdf",
+    "filename": "{title}.pdf"
+  },
+  "advanced": {
+    "enableRotation": true,
+    "gridStyle": "cross",
+    "borderStyle": "solid"
+  }
+} 

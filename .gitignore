@@ -1,0 +1,53 @@
+# 依赖
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 输出文件
+output/*.pdf
+*.pdf
+copybooks/
+
+# AI配置文件（包含敏感信息）
+src/config/ai-config.json
+src/*.typ
+
+# 临时文件
+.temp/
+temp/
+.cache/
+
+# 测试覆盖率
+coverage/
+
+# 环境变量
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 日志
+logs/
+*.log
+
+# 构建产物
+dist/
+build/ 
