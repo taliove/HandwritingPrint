@@ -1,14 +1,14 @@
-# 拼音字体大小动态调整功能
+# 拼音字体智能优化功能
 
 ## 功能说明
 
-为了解决长拼音（如"shuang"、"chuang"、"zhuang"等）在田字格中溢出的问题，我们实现了拼音字体大小的动态调整功能。
+为了解决长拼音（如"shuang"、"chuang"、"zhuang"等）在田字格中溢出的问题，我们实现了基于字符间距控制的智能优化方案，这比单纯缩小字体更加优雅和有效。
 
 ## 实现逻辑
 
-- **拼音字符数 < 5**: 使用正常字体大小 (默认 0.6cm)
-- **拼音字符数 = 5**: 使用中等字体大小 (0.5cm，减少0.1cm)
-- **拼音字符数 >= 6**: 使用最小字体大小 (0.4cm，减少0.2cm)
+- **拼音字符数 < 5**: 正常字体 + 正常间距 (0.6cm + tracking: 0em)
+- **拼音字符数 = 5**: 正常字体 + 紧缩间距 (0.6cm + tracking: -0.03em)
+- **拼音字符数 >= 6**: 小字体 + 紧缩间距 (0.5cm + tracking: -0.05em)
 
 ## 技术实现
 
@@ -17,24 +17,24 @@
 
 ### 核心代码
 ```typst
-// 根据拼音字符数动态调整字体大小
-let dynamic_pinyin_size = if pinyin.len() >= 6 {
-  // 6个字符及以上：进一步缩小（减少0.2cm）
-  let base_size = if pinyinSize == 0.6cm { 0.4cm } else { 
-    let size_val = pinyinSize / 1cm
-    (size_val - 0.2) * 1cm
-  }
-  base_size
-} else if pinyin.len() >= 5 {
-  // 5个字符：适度缩小（减少0.1cm）
+// 根据拼音字符数动态调整字体属性 - 使用更优雅的解决方案
+let (dynamic_pinyin_size, dynamic_tracking) = if pinyin.len() >= 6 {
+  // 6个字符及以上：使用字符间距紧缩 + 适度缩小字体
   let base_size = if pinyinSize == 0.6cm { 0.5cm } else { 
     let size_val = pinyinSize / 1cm
     (size_val - 0.1) * 1cm
   }
-  base_size
+  (base_size, -0.05em)  // 负值表示字符间距紧缩
+} else if pinyin.len() >= 5 {
+  // 5个字符：仅使用字符间距紧缩
+  (pinyinSize, -0.03em)
 } else {
-  pinyinSize
+  // 短拼音：正常间距
+  (pinyinSize, 0em)
 }
+
+// 应用字体大小和字符间距
+text(font: pinyinFont, fill: color, size: dynamic_pinyin_size, tracking: dynamic_tracking, pinyin)
 ```
 
 ## 测试验证
@@ -45,21 +45,21 @@ let dynamic_pinyin_size = if pinyin.len() >= 6 {
 
 ### 测试用例
 测试包含以下拼音长度的汉字：
-- 短拼音 (2-4字符): 你(ni), 好(hao), 世(shi), 界(jie) - 使用正常字体 (0.6cm)
-- 中等拼音 (5字符): 光(guang) - 使用中等字体 (0.5cm)
-- 长拼音 (6字符): 双(shuang), 创(chuang), 装(zhuang) - 使用最小字体 (0.4cm)
+- 短拼音 (2-4字符): 你(ni), 好(hao), 世(shi), 界(jie) - 正常字体+正常间距
+- 中等拼音 (5字符): 光(guang) - 正常字体+紧缩间距 (tracking: -0.03em)
+- 长拼音 (6字符): 双(shuang), 创(chuang), 装(zhuang) - 小字体+紧缩间距 (0.5cm + tracking: -0.05em)
 
 ## 效果对比
 
 ### 修改前
-- 所有拼音使用相同字体大小 (0.6cm)
-- 长拼音如"shuang"、"chuang"、"zhuang"可能溢出田字格
+- 所有拼音使用相同字体大小和间距 (0.6cm + 正常间距)
+- 长拼音如"shuang"、"chuang"、"zhuang"容易溢出田字格
 
 ### 修改后  
-- 短拼音 (<5字符): 0.6cm (正常大小)
-- 中等拼音 (5字符): 0.5cm (适度缩小)
-- 长拼音 (>=6字符): 0.4cm (进一步缩小)
-- 分级调整，有效防止各种长度拼音的溢出问题
+- 短拼音 (<5字符): 正常字体+正常间距 (0.6cm + tracking: 0em)
+- 中等拼音 (5字符): 正常字体+紧缩间距 (0.6cm + tracking: -0.03em)
+- 长拼音 (>=6字符): 小字体+紧缩间距 (0.5cm + tracking: -0.05em)
+- **核心优势**: 使用字符间距控制比单纯缩小字体更优雅，保持了字体的可读性
 
 ## 兼容性
 
