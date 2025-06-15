@@ -1,0 +1,26 @@
+{
+  "title": "一年级下学期生字练习卡",
+  "description": "从 一年级下学期生字练习卡.json 迁移",
+  "fonts": [
+    "kaishu",
+    "xingshu",
+    "lishu"
+  ],
+  "colors": {
+    "theme": "#b2f2bb",
+    "border": "#40c057"
+  },
+  "content": {
+    "motto": "业精于勤而荒于嬉，行成于思而毁于随"
+  },
+  "output": {
+    "format": "$字帖名-$字体-$字数字-$生成日期"
+  },
+  "layout": {
+    "columnCount": 12,
+    "wordCount": 8,
+    "margin": "1.2cm"
+  },
+  "createdAt": "2025-06-14T06:48:16.522Z",
+  "updatedAt": "2025-06-14T07:41:32.870Z"
+}
