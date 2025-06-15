@@ -1,0 +1,754 @@
+[
+  {
+    "word": "春",
+    "pinyin": "chūn"
+  },
+  {
+    "word": "冬",
+    "pinyin": "dōng"
+  },
+  {
+    "word": "吹",
+    "pinyin": "chuī"
+  },
+  {
+    "word": "花",
+    "pinyin": "huā"
+  },
+  {
+    "word": "飞",
+    "pinyin": "fēi"
+  },
+  {
+    "word": "入",
+    "pinyin": "rù"
+  },
+  {
+    "word": "什",
+    "pinyin": "shí"
+  },
+  {
+    "word": "么",
+    "pinyin": "me"
+  },
+  {
+    "word": "古",
+    "pinyin": "gǔ"
+  },
+  {
+    "word": "胡",
+    "pinyin": "hú"
+  },
+  {
+    "word": "双",
+    "pinyin": "shuāng"
+  },
+  {
+    "word": "言",
+    "pinyin": "yán"
+  },
+  {
+    "word": "青",
+    "pinyin": "qīng"
+  },
+  {
+    "word": "清",
+    "pinyin": "qīng"
+  },
+  {
+    "word": "晴",
+    "pinyin": "qíng"
+  },
+  {
+    "word": "苗",
+    "pinyin": "miáo"
+  },
+  {
+    "word": "请",
+    "pinyin": "qǐng"
+  },
+  {
+    "word": "生",
+    "pinyin": "shēng"
+  },
+  {
+    "word": "字",
+    "pinyin": "zì"
+  },
+  {
+    "word": "红",
+    "pinyin": "hóng"
+  },
+  {
+    "word": "动",
+    "pinyin": "dòng"
+  },
+  {
+    "word": "万",
+    "pinyin": "wàn"
+  },
+  {
+    "word": "无",
+    "pinyin": "wú"
+  },
+  {
+    "word": "明",
+    "pinyin": "míng"
+  },
+  {
+    "word": "文",
+    "pinyin": "wén"
+  },
+  {
+    "word": "卡",
+    "pinyin": "kǎ"
+  },
+  {
+    "word": "片",
+    "pinyin": "piàn"
+  },
+  {
+    "word": "合",
+    "pinyin": "hé"
+  },
+  {
+    "word": "共",
+    "pinyin": "gòng"
+  },
+  {
+    "word": "产",
+    "pinyin": "chǎn"
+  },
+  {
+    "word": "党",
+    "pinyin": "dǎng"
+  },
+  {
+    "word": "太",
+    "pinyin": "tài"
+  },
+  {
+    "word": "阳",
+    "pinyin": "yáng"
+  },
+  {
+    "word": "光",
+    "pinyin": "guāng"
+  },
+  {
+    "word": "井",
+    "pinyin": "jǐng"
+  },
+  {
+    "word": "主",
+    "pinyin": "zhǔ"
+  },
+  {
+    "word": "江",
+    "pinyin": "jiāng"
+  },
+  {
+    "word": "住",
+    "pinyin": "zhù"
+  },
+  {
+    "word": "方",
+    "pinyin": "fāng"
+  },
+  {
+    "word": "后",
+    "pinyin": "hòu"
+  },
+  {
+    "word": "告",
+    "pinyin": "gào"
+  },
+  {
+    "word": "的",
+    "pinyin": "de"
+  },
+  {
+    "word": "会",
+    "pinyin": "huì"
+  },
+  {
+    "word": "北",
+    "pinyin": "běi"
+  },
+  {
+    "word": "京",
+    "pinyin": "jīng"
+  },
+  {
+    "word": "广",
+    "pinyin": "guǎng"
+  },
+  {
+    "word": "写",
+    "pinyin": "xiě"
+  },
+  {
+    "word": "认",
+    "pinyin": "rèn"
+  },
+  {
+    "word": "走",
+    "pinyin": "zǒu"
+  },
+  {
+    "word": "河",
+    "pinyin": "hé"
+  },
+  {
+    "word": "说",
+    "pinyin": "shuō"
+  },
+  {
+    "word": "让",
+    "pinyin": "ràng"
+  },
+  {
+    "word": "自",
+    "pinyin": "zì"
+  },
+  {
+    "word": "己",
+    "pinyin": "jǐ"
+  },
+  {
+    "word": "从",
+    "pinyin": "cóng"
+  },
+  {
+    "word": "好",
+    "pinyin": "hǎo"
+  },
+  {
+    "word": "们",
+    "pinyin": "men"
+  },
+  {
+    "word": "叫",
+    "pinyin": "jiào"
+  },
+  {
+    "word": "他",
+    "pinyin": "tā"
+  },
+  {
+    "word": "回",
+    "pinyin": "huí"
+  },
+  {
+    "word": "快",
+    "pinyin": "kuài"
+  },
+  {
+    "word": "乐",
+    "pinyin": "lè"
+  },
+  {
+    "word": "当",
+    "pinyin": "dāng"
+  },
+  {
+    "word": "书",
+    "pinyin": "shū"
+  },
+  {
+    "word": "画",
+    "pinyin": "huà"
+  },
+  {
+    "word": "毛",
+    "pinyin": "máo"
+  },
+  {
+    "word": "止",
+    "pinyin": "zhǐ"
+  },
+  {
+    "word": "仔",
+    "pinyin": "zǎi"
+  },
+  {
+    "word": "寸",
+    "pinyin": "cùn"
+  },
+  {
+    "word": "丁",
+    "pinyin": "dīng"
+  },
+  {
+    "word": "千",
+    "pinyin": "qiān"
+  },
+  {
+    "word": "元",
+    "pinyin": "yuán"
+  },
+  {
+    "word": "思",
+    "pinyin": "sī"
+  },
+  {
+    "word": "床",
+    "pinyin": "chuáng"
+  },
+  {
+    "word": "前",
+    "pinyin": "qián"
+  },
+  {
+    "word": "地",
+    "pinyin": "dì"
+  },
+  {
+    "word": "故",
+    "pinyin": "gù"
+  },
+  {
+    "word": "乡",
+    "pinyin": "xiāng"
+  },
+  {
+    "word": "色",
+    "pinyin": "sè"
+  },
+  {
+    "word": "讲",
+    "pinyin": "jiǎng"
+  },
+  {
+    "word": "样",
+    "pinyin": "yàng"
+  },
+  {
+    "word": "笑",
+    "pinyin": "xiào"
+  },
+  {
+    "word": "再",
+    "pinyin": "zài"
+  },
+  {
+    "word": "米",
+    "pinyin": "mǐ"
+  },
+  {
+    "word": "间",
+    "pinyin": "jiān"
+  },
+  {
+    "word": "分",
+    "pinyin": "fēn"
+  },
+  {
+    "word": "吃",
+    "pinyin": "chī"
+  },
+  {
+    "word": "肉",
+    "pinyin": "ròu"
+  },
+  {
+    "word": "册",
+    "pinyin": "cè"
+  },
+  {
+    "word": "支",
+    "pinyin": "zhī"
+  },
+  {
+    "word": "电",
+    "pinyin": "diàn"
+  },
+  {
+    "word": "衣",
+    "pinyin": "yī"
+  },
+  {
+    "word": "物",
+    "pinyin": "wù"
+  },
+  {
+    "word": "造",
+    "pinyin": "zào"
+  },
+  {
+    "word": "运",
+    "pinyin": "yùn"
+  },
+  {
+    "word": "欢",
+    "pinyin": "huān"
+  },
+  {
+    "word": "房",
+    "pinyin": "fáng"
+  },
+  {
+    "word": "网",
+    "pinyin": "wǎng"
+  },
+  {
+    "word": "对",
+    "pinyin": "duì"
+  },
+  {
+    "word": "今",
+    "pinyin": "jīn"
+  },
+  {
+    "word": "雪",
+    "pinyin": "xuě"
+  },
+  {
+    "word": "细",
+    "pinyin": "xì"
+  },
+  {
+    "word": "夕",
+    "pinyin": "xī"
+  },
+  {
+    "word": "语",
+    "pinyin": "yǔ"
+  },
+  {
+    "word": "近",
+    "pinyin": "jìn"
+  },
+  {
+    "word": "习",
+    "pinyin": "xí"
+  },
+  {
+    "word": "远",
+    "pinyin": "yuǎn"
+  },
+  {
+    "word": "学",
+    "pinyin": "xué"
+  },
+  {
+    "word": "玉",
+    "pinyin": "yù"
+  },
+  {
+    "word": "义",
+    "pinyin": "yì"
+  },
+  {
+    "word": "抱",
+    "pinyin": "bào"
+  },
+  {
+    "word": "手",
+    "pinyin": "shǒu"
+  },
+  {
+    "word": "尺",
+    "pinyin": "chǐ"
+  },
+  {
+    "word": "才",
+    "pinyin": "cái"
+  },
+  {
+    "word": "尖",
+    "pinyin": "jiān"
+  },
+  {
+    "word": "角",
+    "pinyin": "jiǎo"
+  },
+  {
+    "word": "早",
+    "pinyin": "zǎo"
+  },
+  {
+    "word": "玩",
+    "pinyin": "wán"
+  },
+  {
+    "word": "眼",
+    "pinyin": "yǎn"
+  },
+  {
+    "word": "泪",
+    "pinyin": "lèi"
+  },
+  {
+    "word": "它",
+    "pinyin": "tā"
+  },
+  {
+    "word": "贝",
+    "pinyin": "bèi"
+  },
+  {
+    "word": "气",
+    "pinyin": "qì"
+  },
+  {
+    "word": "台",
+    "pinyin": "tái"
+  },
+  {
+    "word": "唱",
+    "pinyin": "chàng"
+  },
+  {
+    "word": "伞",
+    "pinyin": "sǎn"
+  },
+  {
+    "word": "多",
+    "pinyin": "duō"
+  },
+  {
+    "word": "美",
+    "pinyin": "měi"
+  },
+  {
+    "word": "这",
+    "pinyin": "zhè"
+  },
+  {
+    "word": "看",
+    "pinyin": "kàn"
+  },
+  {
+    "word": "鱼",
+    "pinyin": "yú"
+  },
+  {
+    "word": "面",
+    "pinyin": "miàn"
+  },
+  {
+    "word": "问",
+    "pinyin": "wèn"
+  },
+  {
+    "word": "加",
+    "pinyin": "jiā"
+  },
+  {
+    "word": "豆",
+    "pinyin": "dòu"
+  },
+  {
+    "word": "斗",
+    "pinyin": "dǒu"
+  },
+  {
+    "word": "笔",
+    "pinyin": "bǐ"
+  },
+  {
+    "word": "知",
+    "pinyin": "zhī"
+  },
+  {
+    "word": "道",
+    "pinyin": "dào"
+  },
+  {
+    "word": "放",
+    "pinyin": "fàng"
+  },
+  {
+    "word": "平",
+    "pinyin": "píng"
+  },
+  {
+    "word": "安",
+    "pinyin": "ān"
+  },
+  {
+    "word": "灯",
+    "pinyin": "dēng"
+  },
+  {
+    "word": "年",
+    "pinyin": "nián"
+  },
+  {
+    "word": "站",
+    "pinyin": "zhàn"
+  },
+  {
+    "word": "课",
+    "pinyin": "kè"
+  },
+  {
+    "word": "坐",
+    "pinyin": "zuò"
+  },
+  {
+    "word": "老",
+    "pinyin": "lǎo"
+  },
+  {
+    "word": "师",
+    "pinyin": "shī"
+  },
+  {
+    "word": "国",
+    "pinyin": "guó"
+  },
+  {
+    "word": "都",
+    "pinyin": "dōu"
+  },
+  {
+    "word": "百",
+    "pinyin": "bǎi"
+  },
+  {
+    "word": "听",
+    "pinyin": "tīng"
+  },
+  {
+    "word": "时",
+    "pinyin": "shí"
+  },
+  {
+    "word": "点",
+    "pinyin": "diǎn"
+  },
+  {
+    "word": "林",
+    "pinyin": "lín"
+  },
+  {
+    "word": "高",
+    "pinyin": "gāo"
+  },
+  {
+    "word": "兴",
+    "pinyin": "xìng"
+  },
+  {
+    "word": "着",
+    "pinyin": "zhe"
+  },
+  {
+    "word": "往",
+    "pinyin": "wǎng"
+  },
+  {
+    "word": "瓜",
+    "pinyin": "guā"
+  },
+  {
+    "word": "兔",
+    "pinyin": "tù"
+  },
+  {
+    "word": "进",
+    "pinyin": "jìn"
+  },
+  {
+    "word": "冲",
+    "pinyin": "chōng"
+  },
+  {
+    "word": "洗",
+    "pinyin": "xǐ"
+  },
+  {
+    "word": "空",
+    "pinyin": "kōng"
+  },
+  {
+    "word": "还",
+    "pinyin": "hái"
+  },
+  {
+    "word": "身",
+    "pinyin": "shēn"
+  },
+  {
+    "word": "星",
+    "pinyin": "xīng"
+  },
+  {
+    "word": "久",
+    "pinyin": "jiǔ"
+  },
+  {
+    "word": "吓",
+    "pinyin": "xià"
+  },
+  {
+    "word": "为",
+    "pinyin": "wéi"
+  },
+  {
+    "word": "怕",
+    "pinyin": "pà"
+  },
+  {
+    "word": "家",
+    "pinyin": "jiā"
+  },
+  {
+    "word": "象",
+    "pinyin": "xiàng"
+  },
+  {
+    "word": "没",
+    "pinyin": "méi"
+  },
+  {
+    "word": "到",
+    "pinyin": "dào"
+  },
+  {
+    "word": "向",
+    "pinyin": "xiàng"
+  },
+  {
+    "word": "边",
+    "pinyin": "biān"
+  },
+  {
+    "word": "行",
+    "pinyin": "xíng"
+  },
+  {
+    "word": "草",
+    "pinyin": "cǎo"
+  },
+  {
+    "word": "越",
+    "pinyin": "yuè"
+  },
+  {
+    "word": "过",
+    "pinyin": "guò"
+  },
+  {
+    "word": "找",
+    "pinyin": "zhǎo"
+  },
+  {
+    "word": "页",
+    "pinyin": "yè"
+  },
+  {
+    "word": "户",
+    "pinyin": "hù"
+  },
+  {
+    "word": "交",
+    "pinyin": "jiāo"
+  },
+  {
+    "word": "父",
+    "pinyin": "fù"
+  }
+]
