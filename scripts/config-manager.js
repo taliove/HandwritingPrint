@@ -147,11 +147,21 @@ class ConfigManager {
 #let defaultSign = "${config.content?.sign || '业精于勤而荒于嬉，行成于思而毁于随'}"
 #let includeScore = ${config.content?.includeScore || true}
 #let enableRotation = ${config.advanced?.enableRotation || true}
+#let traceCount = ${config.layout?.traceCount || 1}  // 摹写次数，默认为1次
 `;
   }
 
-  async updateTypstConfig() {
+  async updateTypstConfig(copybookConfig = null) {
     const config = await this.getMergedConfig();
+    
+    // 如果提供了字帖配置，合并字帖特定的设置
+    if (copybookConfig) {
+      // 合并布局配置，特别是traceCount
+      if (copybookConfig.layout) {
+        config.layout = { ...config.layout, ...copybookConfig.layout };
+      }
+    }
+    
     const typstConfig = await this.generateTypstConfig(config);
     
     const configPath = path.join(__dirname, '../src/templates/config.typ');

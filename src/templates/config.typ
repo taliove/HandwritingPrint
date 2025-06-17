@@ -5,8 +5,8 @@
 #let grayTextColor = rgb("#808080")
 
 #let pyHeight = 1cm
-#let themeFont = "LvMuJiJXP"
-#let titleFont = "LvMuJiJXP"
+#let themeFont = "STLiti"
+#let titleFont = "STLiti"
 #let pinyinFont = "ToneOZ-Pinyin-Kai-Traditional"
 #let pinyinSize = 0.6cm
 #let titleSize = 16pt
@@ -21,3 +21,4 @@
 #let defaultSign = "业精于勤而荒于嬉，行成于思而毁于随"
 #let includeScore = true
 #let enableRotation = true
+#let traceCount = 1  // 摹写次数，默认为1次

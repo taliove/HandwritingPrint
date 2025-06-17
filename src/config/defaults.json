@@ -11,7 +11,8 @@
     "columnCount": 12,
     "wordTotal": 48,
     "wordCount": 8,
-    "boxSize": "1.5cm"
+    "boxSize": "1.5cm",
+    "traceCount": 1
   },
   "fontSet": "kaishu",
   "colors": {

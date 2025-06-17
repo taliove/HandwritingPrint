@@ -128,6 +128,19 @@ class CopybookSystem {
         suffix: ' (可用变量: $字帖名, $字体, $字数字, $生成日期)'
       },
       {
+        type: 'number',
+        name: 'traceCount',
+        message: '摹写次数:',
+        default: 1,
+        validate: (input) => {
+          if (!Number.isInteger(input) || input < 1 || input > 10) {
+            return '摹写次数必须是1-10之间的整数';
+          }
+          return true;
+        },
+        suffix: ' (每个汉字的摹写练习次数，推荐1-3次)'
+      },
+      {
         type: 'confirm',
         name: 'inputWords',
         message: '现在输入汉字?',
@@ -153,7 +166,8 @@ class CopybookSystem {
       layout: {
         columnCount: 12,
         wordCount: 8,
-        margin: '1.2cm'
+        margin: '1.2cm',
+        traceCount: answers.traceCount
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -328,8 +342,8 @@ class CopybookSystem {
 
   // 使用指定字体编译
   async compileWithFont(copybook, font, outputName) {
-    // 更新字体配置
-    await this.updateFontConfig(font);
+    // 更新字体配置，传递字帖配置
+    await this.updateFontConfig(font, copybook.config);
     
     // 生成临时typ文件到src目录
     const typContent = this.generateTypContent(copybook, font);
@@ -357,13 +371,13 @@ class CopybookSystem {
   }
 
   // 更新字体配置
-  async updateFontConfig(font) {
+  async updateFontConfig(font, copybookConfig = null) {
     const ConfigManager = require('./config-manager');
     const configManager = new ConfigManager();
     
     try {
       await configManager.setFontSet(font);
-      await configManager.updateTypstConfig();
+      await configManager.updateTypstConfig(copybookConfig);
     } catch (error) {
       console.warn(chalk.yellow(`⚠️  字体配置更新失败: ${error.message}`));
     }

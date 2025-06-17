@@ -103,25 +103,28 @@
   let boxes = ()
   let n = 0
   let words-index = 0
-  while n < word_total {
-    let index = mod(n, 6);
   
-    let w = if index == 0 or index == 1 { 
-      words-index 
+  while n < word_total {
+    let index = mod(n, 6);  // 每个汉字固定占用6个格子
+    let current-word-index = calc.floor(n / 6);  // 当前汉字的索引
+  
+    // 只有index 0和1到traceCount时显示汉字，其他显示空白
+    let w = if index == 0 or (index >= 1 and index <= traceCount) { 
+      current-word-index
     } 
     else {
       -1
     };
+    
     let word = if w >= 0 and w < wordss.len() { 
-      if index > 0 {
-        words-index = words-index + 1
-      }
       wordss.at(w)
     }
     else { 
       (word:"", pinyin:"")
     }
-    if index == 1 {
+    
+    // 显示逻辑：index 1到traceCount显示灰色，其他显示黑色
+    if index >= 1 and index <= traceCount {
       boxes.push(one_box_canvas(boxSize, themeFont, wordSize, grayTextColor, word.word, word.pinyin))
     } else {
       boxes.push(one_box_canvas(boxSize, themeFont, wordSize, textColor, word.word, word.pinyin))

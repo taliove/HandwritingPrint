@@ -220,6 +220,19 @@ class CopybookCLI {
         message: '输出文件名格式:',
         default: config.output.format,
         suffix: ' (可用变量: $字帖名, $字体, $字数字, $生成日期)'
+      },
+      {
+        type: 'number',
+        name: 'traceCount',
+        message: '摹写次数:',
+        default: config.layout?.traceCount || 1,
+        validate: (input) => {
+          if (!Number.isInteger(input) || input < 1 || input > 10) {
+            return '摹写次数必须是1-10之间的整数';
+          }
+          return true;
+        },
+        suffix: ' (每个汉字的摹写练习次数，推荐1-3次)'
       }
     ]);
 
@@ -238,6 +251,10 @@ class CopybookCLI {
       },
       output: {
         format: answers.outputFormat
+      },
+      layout: {
+        ...config.layout,
+        traceCount: answers.traceCount
       },
       updatedAt: new Date().toISOString()
     };
@@ -259,6 +276,7 @@ class CopybookCLI {
     console.log(chalk.blue('边框色:'), copybook.config.colors.border);
     console.log(chalk.blue('座右铭:'), copybook.config.content.motto);
     console.log(chalk.blue('输出格式:'), copybook.config.output.format);
+    console.log(chalk.blue('摹写次数:'), copybook.config.layout?.traceCount || 1, '次');
     console.log(chalk.blue('创建时间:'), new Date(copybook.config.createdAt).toLocaleString());
     console.log(chalk.blue('更新时间:'), new Date(copybook.config.updatedAt).toLocaleString());
     
