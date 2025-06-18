@@ -9,6 +9,7 @@
   paper: "a4",
   flipped: false, //是否为横向
   margin: 1cm,
+  leading: 2.38cm, // 行间距参数，可配置
   doc,
 ) = {
   show: show-cn-fakebold
@@ -45,7 +46,7 @@
   } else {
     (
       font_size: 26pt,       // 字体大小
-      grid_height: 3cm,    // 栅格单元高度（文字区+对临区）
+      grid_height: 3.2cm,    // 栅格单元高度（文字区+对临区）
       title_size: 26pt,      // 标题字体
       margin: 1cm,           // 页面边距
       max_lines: 8          // A4最大栅格行数
@@ -54,7 +55,7 @@
 }
 
 // 生成单页内容，支持指定文字内容
-#let one_page(title, sign, text_content, paper: "a4", show_title: true) = {
+#let one_page(title, sign, text_content, paper: "a4", show_title: true, leading: 2.38cm) = {
   let params = get_layout_params(paper)
   
   // 标题区域（只在第一页显示）
@@ -72,8 +73,8 @@
   }
   
   // 主文本区域 - 固定间距栅格系统
-  let text_height = 1.5cm  // 文字实际占用高度
-  let practice_height = 1.5cm  // 对临区域高度
+  let text_height = 1.6cm  // 文字实际占用高度
+  let practice_height = 1.6cm  // 对临区域高度
   let total_grids = params.max_lines  // 栅格总数
   
   let textContent = block(
@@ -121,7 +122,7 @@
           #set text(font: themeFont, size: params.font_size, fill: textColor)
           #set par(
             justify: true,
-            leading: 2.38cm,  // 行间距精确匹配对临区域高度
+            leading: leading,  // 使用可配置的行间距
             spacing: 0em,
             first-line-indent: 2em
           )
@@ -140,7 +141,7 @@
 }
 
 // 智能分页函数 - 直接接收文本内容
-#let pages(title, sign, text_content, paper: "a4") = {
+#let pages(title, sign, text_content, paper: "a4", leading: 2.38cm) = {
   let params = get_layout_params(paper)
   let chars = text_content.clusters()
   
@@ -177,7 +178,7 @@
     let page_text = chars.slice(start_pos, end_pos).join("")
     
     // 生成页面（第一页显示标题，后续页面不显示）
-    one_page(title, sign, page_text, paper: paper, show_title: page_num == 0)
+    one_page(title, sign, page_text, paper: paper, show_title: page_num == 0, leading: leading)
     
     // 如果不是最后一页，添加分页符
     if page_num < total_pages - 1 {

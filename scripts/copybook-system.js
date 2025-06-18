@@ -103,24 +103,6 @@ class CopybookSystem {
         validate: (choices) => choices.length > 0 || '至少选择一种字体'
       },
       {
-        type: 'input',
-        name: 'theme',
-        message: '主题颜色:',
-        default: '#b2f2bb'
-      },
-      {
-        type: 'input',
-        name: 'border',
-        message: '边框颜色:',
-        default: '#40c057'
-      },
-      {
-        type: 'input',
-        name: 'motto',
-        message: '座右铭:',
-        default: '业精于勤而荒于嬉，行成于思而毁于随'
-      },
-      {
         type: 'list',
         name: 'templateType',
         message: '选择模板类型:',
@@ -129,6 +111,29 @@ class CopybookSystem {
           { name: '对临横行 (一行字一行空白)', value: 'dl_hh' }
         ],
         default: 'py'
+      },
+      // 只有非对临字帖才需要颜色配置
+      {
+        type: 'input',
+        name: 'theme',
+        message: '主题颜色:',
+        default: '#b2f2bb',
+        when: (answers) => answers.templateType !== 'dl_hh'
+      },
+      {
+        type: 'input',
+        name: 'border',
+        message: '边框颜色:',
+        default: '#40c057',
+        when: (answers) => answers.templateType !== 'dl_hh'
+      },
+      // 只有非对临字帖才需要座右铭
+      {
+        type: 'input',
+        name: 'motto',
+        message: '座右铭:',
+        default: '业精于勤而荒于嬉，行成于思而毁于随',
+        when: (answers) => answers.templateType !== 'dl_hh'
       },
       {
         type: 'list',
@@ -140,6 +145,27 @@ class CopybookSystem {
         ],
         default: 'a4',
         when: (answers) => answers.templateType === 'dl_hh'
+      },
+      // 对临字帖的行间距配置
+      {
+        type: 'confirm',
+        name: 'customLeadingPerFont',
+        message: '是否为不同字体设置不同的行间距?',
+        default: false,
+        when: (answers) => answers.templateType === 'dl_hh'
+      },
+      {
+        type: 'input',
+        name: 'leading',
+        message: '统一行间距 (如: 2.38cm):',
+        default: '2.38cm',
+        when: (answers) => answers.templateType === 'dl_hh' && !answers.customLeadingPerFont,
+        validate: (input) => {
+          if (!/^\d+(\.\d+)?(cm|pt|em)$/.test(input)) {
+            return '请输入有效的长度单位，如: 2.38cm, 24pt, 1.5em';
+          }
+          return true;
+        }
       },
       {
         type: 'input',
@@ -159,7 +185,8 @@ class CopybookSystem {
           }
           return true;
         },
-        suffix: ' (每个汉字的摹写练习次数，推荐1-3次)'
+        suffix: ' (每个汉字的摹写练习次数，推荐1-3次)',
+        when: (answers) => answers.templateType !== 'dl_hh'
       },
       {
         type: 'confirm',
@@ -175,26 +202,67 @@ class CopybookSystem {
       description: answers.description,
       fonts: answers.fonts,
       templateType: answers.templateType || 'py',
-      colors: {
-        theme: answers.theme,
-        border: answers.border
-      },
-      content: {
-        motto: answers.motto
-      },
       output: {
         format: answers.outputFormat
-      },
-      layout: {
-        columnCount: 12,
-        wordCount: 8,
-        margin: '1.2cm',
-        traceCount: answers.traceCount,
-        paper: answers.paperSize || 'a4'
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+
+    // 根据模板类型添加不同的配置
+    if (answers.templateType === 'dl_hh') {
+      // 对临字帖配置
+      config.layout = {
+        margin: '1.2cm',
+        paper: answers.paperSize || 'a4'
+      };
+      
+      // 处理行间距配置
+      if (answers.customLeadingPerFont) {
+        // 为每个字体单独设置leading
+        console.log(chalk.cyan('\n📏 为每个字体设置行间距:'));
+        config.layout.leadingPerFont = {};
+        
+        for (const font of answers.fonts) {
+          const fontName = this.getFontDisplayName(font);
+          const { leading } = await inquirer.prompt([
+            {
+              type: 'input',
+              name: 'leading',
+              message: `${fontName}字体的行间距 (如: 2.38cm):`,
+              default: '2.38cm',
+              validate: (input) => {
+                if (!/^\d+(\.\d+)?(cm|pt|em)$/.test(input)) {
+                  return '请输入有效的长度单位，如: 2.38cm, 24pt, 1.5em';
+                }
+                return true;
+              }
+            }
+          ]);
+          config.layout.leadingPerFont[font] = leading;
+          console.log(chalk.green(`✅ ${fontName}: ${leading}`));
+        }
+      } else {
+        // 统一行间距
+        config.layout.leading = answers.leading || '2.38cm';
+      }
+    } else {
+      // 传统字帖配置
+      config.colors = {
+        theme: answers.theme,
+        border: answers.border
+      };
+      config.content = {
+        motto: answers.motto
+      };
+      config.layout = {
+        columnCount: 12,
+        wordCount: 8,
+        margin: '1.2cm',
+        traceCount: answers.traceCount,
+        paper: 'a4'
+      };
+    }
 
     const configPath = path.join(this.copybooksDir, `${answers.name}.config.json`);
     const txtPath = path.join(this.copybooksDir, `${answers.name}.txt`);
@@ -241,6 +309,17 @@ class CopybookSystem {
     const jsonPath = path.join(this.copybooksDir, `${name}.json`);
 
     try {
+      // 检查字帖类型
+      const configPath = path.join(this.copybooksDir, `${name}.config.json`);
+      const config = await fs.readJson(configPath);
+      const templateType = config.templateType || 'py';
+      
+      // 对临字帖不需要生成JSON
+      if (templateType === 'dl_hh') {
+        console.log(chalk.blue('📝 对临字帖无需生成JSON数据，直接使用txt文件'));
+        return { success: true, wordCount: 0, message: '对临字帖使用txt文件，无需JSON处理' };
+      }
+
       const content = await fs.readFile(txtPath, 'utf8');
       
       // 提取汉字，保留重复字符
@@ -286,8 +365,6 @@ class CopybookSystem {
       await fs.writeJson(jsonPath, chars, { spaces: 2 });
       
       // 更新配置文件的更新时间
-      const configPath = path.join(this.copybooksDir, `${name}.config.json`);
-      const config = await fs.readJson(configPath);
       config.updatedAt = new Date().toISOString();
       await fs.writeJson(configPath, config, { spaces: 2 });
 
@@ -379,7 +456,7 @@ class CopybookSystem {
 
   // 生成输出文件名
   generateOutputFilename(copybook, font) {
-    const format = copybook.config.output?.format || '$字帖名-$字体';
+    const format = copybook.config.output?.format || '$字帖名-$字体-$字数字-$生成日期';
     const date = new Date().toISOString().split('T')[0];
     
     return format
@@ -449,12 +526,23 @@ class CopybookSystem {
     
     if (templateType === 'dl_hh') {
       // 对临横行模板 - 直接读取txt文件，保留原始格式
+      let leading;
+      
+      // 检查是否有为不同字体设置的leading
+      if (copybook.config.layout?.leadingPerFont && copybook.config.layout.leadingPerFont[font]) {
+        leading = copybook.config.layout.leadingPerFont[font];
+      } else {
+        // 使用统一的leading或默认值
+        leading = copybook.config.layout?.leading || '2.38cm';
+      }
+      
       return `#import "templates/conf_dl_hh.typ": *
 #import "templates/config.typ": *
 
 #show: conf.with(
   paper: "${paperSize}",
-  margin: ${copybook.config.layout?.margin || '1.2cm'}
+  margin: ${copybook.config.layout?.margin || '1.2cm'},
+  leading: ${leading}
 )
 
 #let text_content = read("../copybooks/${copybook.name}.txt")
@@ -462,7 +550,7 @@ class CopybookSystem {
 #let sign = "${copybook.config.content?.motto || '业精于勤而荒于嬉，行成于思而毁于随'}"
 
 // 生成对临横行字帖 - 直接使用文本内容
-#pages(title, sign, text_content, paper: "${paperSize}")`;
+#pages(title, sign, text_content, paper: "${paperSize}", leading: ${leading})`;
     } else {
       // 默认田字格带拼音模板
       return `#import "templates/conf_py.typ": *

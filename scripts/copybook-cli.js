@@ -564,6 +564,14 @@ class CopybookCLI {
       return;
     }
 
+    // 检查模板类型
+    const templateType = copybook.config.templateType || 'py';
+    if (templateType === 'dl_hh') {
+      console.log(chalk.blue('📝 对临字帖直接使用txt文件，无需生成JSON数据'));
+      console.log(chalk.green('✅ 对临字帖已就绪，可直接编译'));
+      return;
+    }
+
     // 检查txt文件是否存在
     if (!copybook.txtExists) {
       console.log(chalk.yellow('⚠️  txt文件不存在，无法刷新数据'));
