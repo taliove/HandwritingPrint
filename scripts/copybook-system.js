@@ -426,7 +426,7 @@ class CopybookSystem {
 #let sign = "${copybook.config.content?.motto || '业精于勤而荒于嬉，行成于思而毁于随'}"
 
 // 生成对临横行字帖
-pages(title, sign, data, data.len(), paper: "${paperSize}")`;
+#pages(title, sign, data, data.len(), paper: "${paperSize}")`;
     } else {
       // 默认田字格带拼音模板
       return `#import "templates/conf_py.typ": *

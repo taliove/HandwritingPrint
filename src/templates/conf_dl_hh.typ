@@ -1,4 +1,4 @@
-//  对临横行 - 配置化版本
+//  对临横行 - 配置化版本 (一行文字一行空白)
 #import "@preview/cetz:0.3.0"
 #import "@preview/cuti:0.2.1": show-cn-fakebold
 
@@ -16,7 +16,6 @@
     paper: paper,
     flipped: flipped,
     margin: (x: margin, y: margin),
-    numbering: "1 / 1",
     footer: context [
       #set align(right)
       #set text(8pt)
@@ -26,15 +25,14 @@
       )
     ]
   )
-  set align(left)
   set text(
-    font: titleFont,
-    size: 14pt
+    font: themeFont,
+    size: 12pt
   )
   set par(
-    justify: true,
-    leading: 0.5cm,
-    spacing: 0.5cm,
+    justify: false,
+    leading: 0.3em,
+    spacing: 0.5em,
   )
   doc
 }
@@ -44,193 +42,137 @@
   box(width: 1fr, line(length: length, stroke: luma(180)))
 }
 
-#let score = block(text(size: signSize)[
-  坐姿 #sym.star.stroked#sym.star.stroked#sym.star.stroked#sym.star.stroked#sym.star.stroked
-  #blank(0.5cm)规范书写 #sym.star.stroked#sym.star.stroked#sym.star.stroked#sym.star.stroked#sym.star.stroked
-  #blank(0.5cm)握笔姿势 #sym.star.stroked#sym.star.stroked#sym.star.stroked#sym.star.stroked#sym.star.stroked
-])
+//  中线
+#let centerLineContent = block(width:100%, height:1.2cm, place(center+horizon,line(start: (0%, 0%), end: (100%, 0%),stroke: (paint: themeColor, thickness: 1pt, dash: ("dot", 2pt, 4pt, 2pt)))))
 
-//  底部的评价
-#let bottomContent(containScore) = {
-  if containScore and includeScore {
-    block(width:100% - 0.2cm, height:0.8cm, stroke: 1pt + borderColor, place(center+horizon, score))
-  } else {
-    block(width:100%, height:1cm)
-  }
-}
+// 这个函数已经不需要了，直接在one_page中实现
 
-// 生成一行文字内容
-#let generate_text_line(words, line_height: 1.2cm) = {
-  let content = ""
-  for word in words {
-    if word.word != "" {
-      content += word.word
+// 将文字数组转换为段落文本
+#let words_to_paragraph(word_array) = {
+  word_array.map(item => {
+    if type(item) == dictionary and "word" in item {
+      item.word
+    } else {
+      str(item)
     }
-  }
-  
-  block(
-    width: 100%,
-    height: line_height,
-    inset: (left: 0.5cm, right: 0.5cm),
-    align(left + horizon,
-      text(
-        font: themeFont,
-        size: wordSize,
-        fill: textColor,
-        content
-      )
-    )
-  )
+  }).join("")
 }
 
-// 生成一行空白练习行（带底线）
-#let generate_blank_line(line_height: 1.2cm) = {
-  block(
-    width: 100%,
-    height: line_height,
-    inset: (left: 0.5cm, right: 0.5cm),
-    align(left + horizon,
-      line(
-        length: 100%,
-        stroke: (paint: luma(180), thickness: 1pt)
-      )
-    )
-  )
-}
-
-// 生成标题行
-#let generate_title(title) = {
-  block(
-    width: 100%,
-    height: 1.5cm,
-    stroke: (bottom: 1pt + borderColor),
-    inset: (left: 0.5cm, right: 0.5cm),
-    align(center + horizon,
-      text(
-        font: titleFont,
-        size: titleSize,
-        fill: textColor,
-        title
-      )
-    )
-  )
-}
-
-// 生成签名行
-#let generate_signature(sign) = {
-  block(
-    width: 100%,
-    height: 1cm,
-    inset: (left: 0.5cm, right: 0.5cm),
-    align(right + horizon,
-      text(
-        size: signSize,
-        [#sign#blank(1cm)#underline(3cm)年#blank(0.5cm)#underline(2cm)月#blank(0.5cm)#underline(2cm)日]
-      )
-    )
-  )
-}
-
-// 根据纸张大小计算每页行数
-#let calculate_lines_per_page(paper) = {
-  if paper == "a5" {
-    6  // A5纸张每页6行文字（12行总计，包括空白行）
-  } else {
-    10 // A4纸张每页10行文字（20行总计，包括空白行）
-  }
-}
-
-// 将单词数组分组为行
-#let group_words_to_lines(words, chars_per_line) = {
+// 安全地分割字符串，处理Unicode字符边界
+#let safe_slice_text(text, chars_per_line) = {
+  let chars = text.clusters()  // 使用clusters()获取字符数组，正确处理Unicode
   let lines = ()
-  let current_line = ()
-  let current_length = 0
+  let current_pos = 0
   
-  for word in words {
-    if word.word != "" {
-      if current_length + word.word.len() <= chars_per_line {
-        current_line.push(word)
-        current_length += word.word.len()
-      } else {
-        if current_line.len() > 0 {
-          lines.push(current_line)
-          current_line = (word,)
-          current_length = word.word.len()
-        }
-      }
-    }
-  }
-  
-  if current_line.len() > 0 {
-    lines.push(current_line)
+  while current_pos < chars.len() {
+    let end_pos = calc.min(current_pos + chars_per_line, chars.len())
+    let line_chars = chars.slice(current_pos, end_pos)
+    lines.push(line_chars.join(""))
+    current_pos = end_pos
   }
   
   return lines
 }
 
-// 生成一页内容
-#let generate_page(title, sign, word_lines, paper) = {
-  let lines_per_page = calculate_lines_per_page(paper)
-  let page_lines = word_lines.slice(0, calc.min(lines_per_page, word_lines.len()))
-  
-  let content_blocks = ()
-  
-  // 添加标题
-  content_blocks.push(generate_title(title))
-  
-  // 添加文字行和空白行
-  for line_words in page_lines {
-    content_blocks.push(generate_text_line(line_words))
-    content_blocks.push(generate_blank_line())
+// 根据纸张大小动态调整行数和字体
+#let get_layout_params(paper) = {
+  if paper == "a5" {
+    (
+      lines_per_page: 6,   // A5每页6对行（文字行+空行）
+      font_size: 14pt,     // 稍小的字体
+      line_height: 1.8cm,  // 增加行高给空行留空间
+      chars_per_line: 18   // 每行字符数
+    )
+  } else {
+    (
+      lines_per_page: 8,   // A4每页8对行（文字行+空行）
+      font_size: 30pt,     // 标准字体
+      line_height: 1.8cm,  // 增加行高给空行留空间
+      chars_per_line: 14   // 每行字符数
+    )
   }
-  
-  // 填充剩余空间
-  let remaining_space = lines_per_page - page_lines.len()
-  for i in range(remaining_space) {
-    content_blocks.push(generate_blank_line())
-    content_blocks.push(generate_blank_line())
-  }
-  
-  // 添加签名行
-  content_blocks.push(generate_signature(sign))
-  
-  return stack(dir: ttb, ..content_blocks)
 }
 
-// 主函数：生成对临横行字帖
-#let pages(title, sign, wordss, wordTotal, paper: "a4") = {
-  // 根据纸张大小确定每行字符数
-  let chars_per_line = if paper == "a5" { 12 } else { 20 }
+#let one_page(title, sign, wordss, paper: "a4") = {
+  let params = get_layout_params(paper)
+  let paragraph_text = words_to_paragraph(wordss)
+  let text_lines = safe_slice_text(paragraph_text, params.chars_per_line)
   
-  // 将单词分组为行
-  let word_lines = group_words_to_lines(wordss, chars_per_line)
-  let lines_per_page = calculate_lines_per_page(paper)
+  // 标题区域
+  let titleContent = block(
+    width: 100%,
+    height: 1.5cm,
+    align(center + horizon)[
+      #set text(size: titleSize, font: titleFont, fill: textColor)
+      #title
+    ]
+  )
   
-  // 生成页面内容
-  let current_line_index = 0
+  // 生成文字行和空行对
+  let content_blocks = ()
+  let line_count = calc.min(text_lines.len(), params.lines_per_page)
   
-  while current_line_index < word_lines.len() {
-    let page_word_lines = word_lines.slice(
-      current_line_index, 
-      calc.min(current_line_index + lines_per_page, word_lines.len())
+  for i in range(line_count) {
+    let line_text = text_lines.at(i)
+    
+    // 文字行 - 左对齐
+    let text_block = block(
+      width: 100%,
+      height: 1.5cm,
+      inset: (left: 1cm, right: 1cm, top: 0.2cm, bottom: 0.2cm),
+      align(left + horizon)[
+        #set text(font: themeFont, size: params.font_size, fill: textColor)
+        #set par(justify: false, leading: 0.3em)
+        #line_text
+      ]
     )
     
-    // 生成页面
-    block(
-      height: 100%,
-      stroke: 1pt + borderColor,
-      inset: 0.2cm,
-      generate_page(title, sign, page_word_lines, paper)
+    // 空白行 - 完全空白
+    let blank_block = block(
+      width: 100%,
+      height: 1.5cm,
+      inset: (left: 1cm, right: 1cm),
+      fill: luma(240)  // 添加淡灰色背景
+    )
+    // 横线元素
+    let underline_block = block(
+      width: 100%,
+      inset: (left: 1cm, right: 1cm),
+      stroke: (bottom: 0.3pt + luma(150))
     )
     
-    current_line_index += lines_per_page
-    
-    // 如果还有更多内容，添加分页符
-    if current_line_index < word_lines.len() {
-      pagebreak()
-    }
+    content_blocks.push(text_block)
+    content_blocks.push(blank_block)
+    //content_blocks.push(underline_block)
   }
   
-  // 添加底部评分区域
-  bottomContent(true)
+  // 签名区域
+  let signContent = block(
+    width: 100%,
+    height: 1.2cm,
+    inset: (left: 1cm, right: 1cm),
+    align(left + horizon)[
+      #set text(size: signSize, fill: textColor)
+    ]
+  )
+  
+  // 整体页面布局
+  block(
+    stroke: 1pt + borderColor,
+    inset: 0.3cm,
+    stack(
+      dir: ttb,
+      spacing: 0cm,
+      titleContent,
+      line(length: 100%, stroke: 0.3pt + luma(180)),
+      ..content_blocks,
+      signContent
+    )
+  )
+}
+
+// 生成单页内容
+#let pages(title, sign, wordss, word_count, paper: "a4") = {
+  // 直接生成正常的单页，不进行旋转
+  one_page(title, sign, wordss, paper: paper)
 } 
