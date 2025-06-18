@@ -12,6 +12,7 @@
     "test:ai": "node scripts/test-ai-feature.js",
     "test:refresh": "node scripts/test-refresh-feature.js",
     "test:pinyin": "node scripts/test-pinyin-improvements.js",
+    "test:dl-hh": "node scripts/test-dl-hh-template.js",
     "demo:refresh": "node scripts/demo-refresh.js",
     "lint": "eslint scripts/ --fix",
     "legacy:config": "node scripts/config-manager.js",

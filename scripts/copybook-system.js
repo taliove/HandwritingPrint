@@ -121,6 +121,27 @@ class CopybookSystem {
         default: '业精于勤而荒于嬉，行成于思而毁于随'
       },
       {
+        type: 'list',
+        name: 'templateType',
+        message: '选择模板类型:',
+        choices: [
+          { name: '田字格带拼音 (推荐)', value: 'py' },
+          { name: '对临横行 (一行字一行空白)', value: 'dl_hh' }
+        ],
+        default: 'py'
+      },
+      {
+        type: 'list',
+        name: 'paperSize',
+        message: '选择纸张大小:',
+        choices: [
+          { name: 'A4 (21x29.7cm)', value: 'a4' },
+          { name: 'A5 (14.8x21cm)', value: 'a5' }
+        ],
+        default: 'a4',
+        when: (answers) => answers.templateType === 'dl_hh'
+      },
+      {
         type: 'input',
         name: 'outputFormat',
         message: '输出文件名格式:',
@@ -153,6 +174,7 @@ class CopybookSystem {
       title: answers.title,
       description: answers.description,
       fonts: answers.fonts,
+      templateType: answers.templateType || 'py',
       colors: {
         theme: answers.theme,
         border: answers.border
@@ -167,7 +189,8 @@ class CopybookSystem {
         columnCount: 12,
         wordCount: 8,
         margin: '1.2cm',
-        traceCount: answers.traceCount
+        traceCount: answers.traceCount,
+        paper: answers.paperSize || 'a4'
       },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -385,7 +408,28 @@ class CopybookSystem {
 
   // 生成typ文件内容
   generateTypContent(copybook, font) {
-    return `#import "templates/conf_py.typ": *
+    const templateType = copybook.config.templateType || 'py';
+    const paperSize = copybook.config.layout?.paper || 'a4';
+    
+    if (templateType === 'dl_hh') {
+      // 对临横行模板
+      return `#import "templates/conf_dl_hh.typ": *
+#import "templates/config.typ": *
+
+#show: conf.with(
+  paper: "${paperSize}",
+  margin: ${copybook.config.layout?.margin || '1.2cm'}
+)
+
+#let data = json("../copybooks/${copybook.name}.json")
+#let title = "${copybook.config.title}"
+#let sign = "${copybook.config.content?.motto || '业精于勤而荒于嬉，行成于思而毁于随'}"
+
+// 生成对临横行字帖
+pages(title, sign, data, data.len(), paper: "${paperSize}")`;
+    } else {
+      // 默认田字格带拼音模板
+      return `#import "templates/conf_py.typ": *
 #import "templates/config.typ": *
 
 #show: conf.with(
@@ -401,6 +445,7 @@ class CopybookSystem {
 #for chunk in chunked {
    pages(title, sign, chunk, ${copybook.config.layout?.wordTotal || 48}, ${copybook.config.layout?.columnCount || 12})
 }`;
+    }
   }
 
   // 批量编译
