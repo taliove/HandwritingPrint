@@ -5,8 +5,8 @@
 #let grayTextColor = rgb("#808080")
 
 #let pyHeight = 1cm
-#let themeFont = "STXingshu"
-#let titleFont = "STXingshu"
+#let themeFont = "STLiti"
+#let titleFont = "STLiti"
 #let pinyinFont = "ToneOZ-Pinyin-Kai-Traditional"
 #let pinyinSize = 0.6cm
 #let titleSize = 16pt
