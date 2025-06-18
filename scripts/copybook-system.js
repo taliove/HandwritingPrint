@@ -316,25 +316,61 @@ class CopybookSystem {
       throw new Error(`字帖 "${name}" 不存在`);
     }
 
-    if (!copybook.jsonExists) {
-      console.log(chalk.yellow('⚠️  正在生成数据文件...'));
-      await this.generateJsonFromTxt(name);
+    const config = copybook.config;
+    const templateType = config.templateType || 'py';
+    
+    // 对临字帖只需要txt文件，其他模板需要json文件
+    if (templateType === 'dl_hh') {
+      // 对临字帖检查txt文件
+      if (!copybook.txtExists) {
+        throw new Error(`对临字帖需要txt文件: ${name}.txt`);
+      }
+    } else {
+      // 其他模板检查json文件，如果不存在则从txt生成
+      if (!copybook.jsonExists) {
+        if (!copybook.txtExists) {
+          throw new Error(`数据文件不存在: ${name}.txt 或 ${name}.json`);
+        }
+        
+        console.log(chalk.blue('📝 正在从txt生成json数据...'));
+        const result = await this.generateJsonFromTxt(name);
+        
+        if (!result.success) {
+          throw new Error(`生成JSON失败: ${result.message}`);
+        }
+        
+        if (result.wordCount === 0) {
+          throw new Error('未找到有效的汉字数据');
+        }
+        
+        console.log(chalk.green(`✅ 成功生成 ${result.wordCount} 个汉字的数据`));
+      }
     }
 
-    const targetFonts = fonts || copybook.config.fonts;
+    // 确定要使用的字体
+    const targetFonts = fonts || config.fonts || ['kaishu'];
     const results = [];
 
     for (const font of targetFonts) {
-      console.log(chalk.blue(`🖋️  编译字体: ${this.getFontDisplayName(font)}`));
+      const outputName = this.generateOutputFilename(copybook, font);
       
       try {
-        const outputName = this.generateOutputFilename(copybook, font);
-        const result = await this.compileWithFont(copybook, font, outputName);
-        results.push({ font, success: true, outputName, ...result });
-        console.log(chalk.green(`✅ ${outputName} 编译完成`));
+        const { outputPath } = await this.compileWithFont(copybook, font, outputName);
+        results.push({
+          success: true,
+          font: font,
+          outputName: outputName,
+          outputPath: outputPath
+        });
+        console.log(chalk.green(`  ✅ ${this.getFontDisplayName(font)}: ${outputName}`));
       } catch (error) {
-        results.push({ font, success: false, error: error.message });
-        console.error(chalk.red(`❌ ${this.getFontDisplayName(font)} 编译失败: ${error.message}`));
+        results.push({
+          success: false,
+          font: font,
+          outputName: outputName,
+          error: error.message
+        });
+        console.error(chalk.red(`  ❌ ${this.getFontDisplayName(font)}: ${error.message}`));
       }
     }
 
@@ -412,7 +448,7 @@ class CopybookSystem {
     const paperSize = copybook.config.layout?.paper || 'a4';
     
     if (templateType === 'dl_hh') {
-      // 对临横行模板
+      // 对临横行模板 - 直接读取txt文件，保留原始格式
       return `#import "templates/conf_dl_hh.typ": *
 #import "templates/config.typ": *
 
@@ -421,12 +457,12 @@ class CopybookSystem {
   margin: ${copybook.config.layout?.margin || '1.2cm'}
 )
 
-#let data = json("../copybooks/${copybook.name}.json")
+#let text_content = read("../copybooks/${copybook.name}.txt")
 #let title = "${copybook.config.title}"
 #let sign = "${copybook.config.content?.motto || '业精于勤而荒于嬉，行成于思而毁于随'}"
 
-// 生成对临横行字帖
-#pages(title, sign, data, data.len(), paper: "${paperSize}")`;
+// 生成对临横行字帖 - 直接使用文本内容
+#pages(title, sign, text_content, paper: "${paperSize}")`;
     } else {
       // 默认田字格带拼音模板
       return `#import "templates/conf_py.typ": *

@@ -32,17 +32,6 @@
   doc
 }
 
-// 将文字数组转换为段落文本
-#let words_to_paragraph(word_array) = {
-  word_array.map(item => {
-    if type(item) == dictionary and "word" in item {
-      item.word
-    } else {
-      str(item)
-    }
-  }).join("")
-}
-
 // 根据纸张大小动态调整栅格参数
 #let get_layout_params(paper) = {
   if paper == "a5" {
@@ -150,11 +139,10 @@
   )
 }
 
-// 智能分页函数
-#let pages(title, sign, wordss, word_count, paper: "a4") = {
+// 智能分页函数 - 直接接收文本内容
+#let pages(title, sign, text_content, paper: "a4") = {
   let params = get_layout_params(paper)
-  let paragraph_text = words_to_paragraph(wordss)
-  let chars = paragraph_text.clusters()
+  let chars = text_content.clusters()
   
   // 估算每行可容纳的字符数
   let chars_per_line = if paper == "a5" { 15 } else { 18 }
