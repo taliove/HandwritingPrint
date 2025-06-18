@@ -29,23 +29,8 @@
     font: themeFont,
     size: 12pt
   )
-  set par(
-    justify: false,
-    leading: 0.3em,
-    spacing: 0.5em,
-  )
   doc
 }
-
-#let blank(width) = box(width:width)
-#let underline(length) = {
-  box(width: 1fr, line(length: length, stroke: luma(180)))
-}
-
-//  中线
-#let centerLineContent = block(width:100%, height:1.2cm, place(center+horizon,line(start: (0%, 0%), end: (100%, 0%),stroke: (paint: themeColor, thickness: 1pt, dash: ("dot", 2pt, 4pt, 2pt)))))
-
-// 这个函数已经不需要了，直接在one_page中实现
 
 // 将文字数组转换为段落文本
 #let words_to_paragraph(word_array) = {
@@ -58,37 +43,23 @@
   }).join("")
 }
 
-// 安全地分割字符串，处理Unicode字符边界
-#let safe_slice_text(text, chars_per_line) = {
-  let chars = text.clusters()  // 使用clusters()获取字符数组，正确处理Unicode
-  let lines = ()
-  let current_pos = 0
-  
-  while current_pos < chars.len() {
-    let end_pos = calc.min(current_pos + chars_per_line, chars.len())
-    let line_chars = chars.slice(current_pos, end_pos)
-    lines.push(line_chars.join(""))
-    current_pos = end_pos
-  }
-  
-  return lines
-}
-
-// 根据纸张大小动态调整行数和字体
+// 根据纸张大小动态调整栅格参数
 #let get_layout_params(paper) = {
   if paper == "a5" {
     (
-      lines_per_page: 6,   // A5每页6对行（文字行+空行）
-      font_size: 14pt,     // 稍小的字体
-      line_height: 1.8cm,  // 增加行高给空行留空间
-      chars_per_line: 18   // 每行字符数
+      font_size: 16pt,       // 字体大小
+      grid_height: 2.8cm,    // 栅格单元高度（文字区+对临区）
+      title_size: 30pt,      // 标题字体
+      margin: 0.8cm,         // 页面边距
+      max_lines: 12          // A5最大栅格行数
     )
   } else {
     (
-      lines_per_page: 8,   // A4每页8对行（文字行+空行）
-      font_size: 30pt,     // 标准字体
-      line_height: 1.8cm,  // 增加行高给空行留空间
-      chars_per_line: 14   // 每行字符数
+      font_size: 26pt,       // 字体大小
+      grid_height: 3cm,    // 栅格单元高度（文字区+对临区）
+      title_size: 30pt,      // 标题字体
+      margin: 1cm,           // 页面边距
+      max_lines: 8          // A4最大栅格行数
     )
   }
 }
@@ -96,83 +67,88 @@
 #let one_page(title, sign, wordss, paper: "a4") = {
   let params = get_layout_params(paper)
   let paragraph_text = words_to_paragraph(wordss)
-  let text_lines = safe_slice_text(paragraph_text, params.chars_per_line)
   
   // 标题区域
   let titleContent = block(
     width: 100%,
     height: 1.5cm,
     align(center + horizon)[
-      #set text(size: titleSize, font: titleFont, fill: textColor)
+      #set text(size: params.title_size, font: titleFont, fill: textColor)
       #title
     ]
   )
   
-  // 生成文字行和空行对
-  let content_blocks = ()
-  let line_count = calc.min(text_lines.len(), params.lines_per_page)
+  // 主文本区域 - 固定间距栅格系统
+  let grid_unit = params.grid_height  // 栅格单元总高度
+  let text_height = 1.5cm  // 文字实际占用高度
+  let practice_height = 1.5cm  // 对临区域高度
+  let total_grids = params.max_lines  // 栅格总数
   
-  for i in range(line_count) {
-    let line_text = text_lines.at(i)
-    
-    // 文字行 - 左对齐
-    let text_block = block(
-      width: 100%,
-      height: 1.5cm,
-      inset: (left: 1cm, right: 1cm, top: 0.2cm, bottom: 0.2cm),
-      align(left + horizon)[
-        #set text(font: themeFont, size: params.font_size, fill: textColor)
-        #set par(justify: false, leading: 0.3em)
-        #line_text
-      ]
-    )
-    
-    // 空白行 - 完全空白
-    let blank_block = block(
-      width: 100%,
-      height: 1.5cm,
-      inset: (left: 1cm, right: 1cm),
-      fill: luma(240)  // 添加淡灰色背景
-    )
-    // 横线元素
-    let underline_block = block(
-      width: 100%,
-      inset: (left: 1cm, right: 1cm),
-      stroke: (bottom: 0.3pt + luma(150))
-    )
-    
-    content_blocks.push(text_block)
-    content_blocks.push(blank_block)
-    //content_blocks.push(underline_block)
-  }
-  
-  // 签名区域
-  let signContent = block(
+  let textContent = block(
     width: 100%,
-    height: 1.2cm,
-    inset: (left: 1cm, right: 1cm),
-    align(left + horizon)[
-      #set text(size: signSize, fill: textColor)
-    ]
+    inset: (left: params.margin, right: params.margin, top: 0cm, bottom: 0.8cm),
+    {
+      // 第一层：栅格背景
+      place(top + left, dx: 0pt, dy: 0pt,
+        // 使用stack创建规律的栅格背景
+        stack(
+          dir: ttb,
+          spacing: 0pt,
+          // 生成固定数量的栅格单元
+          ..range(total_grids).map(i => 
+            stack(
+              dir: ttb,
+              spacing: 0pt,
+              // 文字区域（透明背景）
+              block(
+                width: 100%, 
+                height: text_height, 
+                fill: luma(100), 
+                []
+              ),
+              // 对临区域（灰色背景）
+              block(
+                width: 100%, 
+                height: practice_height,
+                fill: luma(250),
+                stroke: (
+                  top: 0.2pt + luma(200),
+                  bottom: 0.2pt + luma(200)
+                ),
+                inset: (left: 0.1cm, right: 0.1cm),
+                []
+              )
+            )
+          )
+        )
+      )
+      
+      // 第二层：文字内容
+      place(top + left, dx: 0pt, dy: 0.4cm,  // 微调垂直位置
+        align(left + top)[
+          #set text(font: themeFont, size: params.font_size, fill: textColor)
+          #set par(
+            justify: false,
+            leading: 4em,  // 行间距精确匹配对临区域高度
+            spacing: 0em,
+            first-line-indent: 2em
+          )
+          #paragraph_text
+        ]
+      )
+    }
   )
   
   // 整体页面布局
-  block(
-    stroke: 1pt + borderColor,
-    inset: 0.3cm,
-    stack(
-      dir: ttb,
-      spacing: 0cm,
-      titleContent,
-      line(length: 100%, stroke: 0.3pt + luma(180)),
-      ..content_blocks,
-      signContent
-    )
+  stack(
+    dir: ttb,
+    //spacing: 0.5cm,
+    titleContent,
+//    line(length: 100%, stroke: 0.5pt + luma(150)),
+    textContent,
   )
 }
 
-// 生成单页内容
 #let pages(title, sign, wordss, word_count, paper: "a4") = {
-  // 直接生成正常的单页，不进行旋转
   one_page(title, sign, wordss, paper: paper)
 } 
