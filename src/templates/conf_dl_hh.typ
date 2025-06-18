@@ -57,29 +57,32 @@
     (
       font_size: 26pt,       // 字体大小
       grid_height: 3cm,    // 栅格单元高度（文字区+对临区）
-      title_size: 30pt,      // 标题字体
+      title_size: 26pt,      // 标题字体
       margin: 1cm,           // 页面边距
       max_lines: 8          // A4最大栅格行数
     )
   }
 }
 
-#let one_page(title, sign, wordss, paper: "a4") = {
+// 生成单页内容，支持指定文字内容
+#let one_page(title, sign, text_content, paper: "a4", show_title: true) = {
   let params = get_layout_params(paper)
-  let paragraph_text = words_to_paragraph(wordss)
   
-  // 标题区域
-  let titleContent = block(
-    width: 100%,
-    height: 1.5cm,
-    align(center + horizon)[
-      #set text(size: params.title_size, font: titleFont, fill: textColor)
-      #title
-    ]
-  )
+  // 标题区域（只在第一页显示）
+  let titleContent = if show_title {
+    block(
+      width: 100%,
+      height: 2cm,
+      align(center + horizon)[
+        #set text(size: params.title_size, font: titleFont, fill: textColor)
+        #title
+      ]
+    )
+  } else {
+    block(width: 100%, height: 0.5cm, [])
+  }
   
   // 主文本区域 - 固定间距栅格系统
-  let grid_unit = params.grid_height  // 栅格单元总高度
   let text_height = 1.5cm  // 文字实际占用高度
   let practice_height = 1.5cm  // 对临区域高度
   let total_grids = params.max_lines  // 栅格总数
@@ -103,14 +106,14 @@
               block(
                 width: 100%, 
                 height: text_height, 
-                fill: luma(100), 
+                fill: none, 
                 []
               ),
               // 对临区域（灰色背景）
               block(
                 width: 100%, 
                 height: practice_height,
-                fill: luma(250),
+                fill: luma(230),
                 stroke: (
                   top: 0.2pt + luma(200),
                   bottom: 0.2pt + luma(200)
@@ -128,12 +131,12 @@
         align(left + top)[
           #set text(font: themeFont, size: params.font_size, fill: textColor)
           #set par(
-            justify: false,
-            leading: 4em,  // 行间距精确匹配对临区域高度
+            justify: true,
+            leading: 2.38cm,  // 行间距精确匹配对临区域高度
             spacing: 0em,
             first-line-indent: 2em
           )
-          #paragraph_text
+          #text_content
         ]
       )
     }
@@ -142,13 +145,55 @@
   // 整体页面布局
   stack(
     dir: ttb,
-    //spacing: 0.5cm,
     titleContent,
-//    line(length: 100%, stroke: 0.5pt + luma(150)),
     textContent,
   )
 }
 
+// 智能分页函数
 #let pages(title, sign, wordss, word_count, paper: "a4") = {
-  one_page(title, sign, wordss, paper: paper)
+  let params = get_layout_params(paper)
+  let paragraph_text = words_to_paragraph(wordss)
+  let chars = paragraph_text.clusters()
+  
+  // 估算每行可容纳的字符数
+  let chars_per_line = if paper == "a5" { 15 } else { 18 }
+  let lines_per_page = params.max_lines
+  let chars_per_page = chars_per_line * lines_per_page
+  
+  // 计算需要多少页
+  let total_pages = calc.ceil(chars.len() / chars_per_page)
+  
+  // 生成所有页面
+  for page_num in range(total_pages) {
+    let start_pos = page_num * chars_per_page
+    let end_pos = calc.min(start_pos + chars_per_page, chars.len())
+    
+    // 找到合适的断句位置（避免在词中间断开）
+    if end_pos < chars.len() {
+      let break_pos = end_pos
+      // 向前寻找合适的断句点
+      while break_pos > start_pos and break_pos < chars.len() {
+        let char = chars.at(break_pos)
+        if char in ("。", "，", "；", "：", "！", "？", "、", " ", "\n") {
+          break_pos += 1
+          break
+        }
+        break_pos -= 1
+      }
+      if break_pos > start_pos {
+        end_pos = break_pos
+      }
+    }
+    
+    let page_text = chars.slice(start_pos, end_pos).join("")
+    
+    // 生成页面（第一页显示标题，后续页面不显示）
+    one_page(title, sign, page_text, paper: paper, show_title: page_num == 0)
+    
+    // 如果不是最后一页，添加分页符
+    if page_num < total_pages - 1 {
+      pagebreak()
+    }
+  }
 } 
