@@ -59,7 +59,7 @@
         let available_height = page_height - params.margin.top - params.margin.bottom - title_height + 0.8cm
         
         // 计算可容纳的文本行数
-        let num_text_lines = calc.floor(available_height / params.line_height)
+        let num_text_lines = calc.ceil(available_height * 2 / params.line_height) + 1
         // 绘制整个练习区域的背景
         rect(
           (0cm, 0cm),
@@ -75,11 +75,18 @@
         for i in range(num_text_lines) {
           // 因为坐标系以底部为0，向上为正，所以需要从顶部向下计算
           // 文本行的位置（从顶部开始计算，但坐标系是底部为0）
-          let text_line_y_from_top = i * params.line_height
+          // 判断是否为第一页，如果是第一页需要调整起始位置
+          let text_line_y_from_top = if has_title {
+            // 第一页有标题，需要额外的偏移
+            2.1cm + i * 1.72cm
+          } else {
+            // 非第一页，使用标准偏移
+            1.685cm + i * 1.72cm
+          }
           let text_line_y = available_height - text_line_y_from_top
           
           // 练习线位置：在文本行下方（坐标系中是更小的y值）
-          let practice_line_y = text_line_y - params.font_size * 1.2
+          let practice_line_y = text_line_y
           
           // 确保练习线不超出内容区域（y > 0）
           if practice_line_y >= 0cm {
@@ -111,19 +118,22 @@
   // 设置默认值
   let params = get_layout_params(paper)
   let actual_leading = if leading == none { params.line_height } else { leading }
-  
   // 设置页面
   set page(
     paper: paper,
-    margin: params.margin,
+    margin: (
+      left: params.margin.left,
+      right: params.margin.right,
+      top: params.margin.top,
+      bottom: 3cm
+    ),
     background: create_practice_overlay(paper)
   )
-  
   // 设置段落样式 - 关键是大行间距
   set par(
     justify: true,
     leading: actual_leading,     // 大行间距，为练习区域留空间
-    first-line-indent: 2em,
+    first-line-indent: 0em,
     spacing: 0.6em
   )
   
@@ -151,8 +161,8 @@
   
   // 页脚签名
   place(
-    bottom + right,
-    dx: -1cm, dy: -0.5cm,
+    bottom + center,
+    dx: 0cm, dy: 0.5cm,
     text(size: 10pt, fill: rgb(150, 150, 150))[#sign]
   )
 }
